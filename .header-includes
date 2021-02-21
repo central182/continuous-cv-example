@@ -1,0 +1,12 @@
+---
+header-includes: |
+  <style>
+  html {
+    background-color: white;
+  }
+
+  body {
+    max-width: 50em;
+  }
+  </style>
+---

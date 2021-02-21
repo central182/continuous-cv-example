@@ -1,0 +1,33 @@
+name: Compile .md
+
+on: push
+# There's no restriction applied on branch names:
+# I may want to send different variants to different recipients.
+
+jobs:
+  compile:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get install wkhtmltopdf fonts-takao
+
+      - run: cat .header-includes README.md > README-for-html.md
+      - uses: docker://pandoc/core:2.11.4
+        with:
+          args: >-
+            --standalone
+            --output=README.html
+            README-for-html.md
+      - run: wkhtmltopdf README.html README.pdf
+      - uses: docker://pandoc/core:2.11.4
+        with:
+          args: >-
+            --output=README.docx
+            README.md
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: build
+          path: |-
+            README.pdf
+            README.docx
